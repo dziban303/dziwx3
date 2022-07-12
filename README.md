@@ -1,7 +1,3 @@
-# pywx3
-python weather bot
-
-
 # IRC weather bot for python3
 
 ### Installation:
@@ -39,6 +35,30 @@ python weather bot
    ```
 1. Make script executable: `sudo chmod 777 ~/dziwx.sh | sudo cp dziwx.sh /usr/local/bin/dziwx.sh`
    - The bot can now be launched by typing `dziwx.sh`
+
+### Commands:
+  - wx [location] — current weather conditions for [location]
+  - wf [loc] — weather forecast
+  - hf (-d|-w|-p) [loc] — hourly forecast
+      - -d — dewpoint forecast
+      - -w — wind forecast
+      - -p — precipitation forecast
+      - -t — temperature forecast      
+      - -z — temperature and dewpoint forecast
+      - -u — relative humidity forecast
+      - -a — apparent temperature forecast
+  - hfx [loc] — hourly forecast in sparklines
+  - alerts [loc] — show weather alerts, if any, for a location
+  - alert [alert number] — get detailed info about an alert shown in `alerts` or `wx`
+  - wxtime|sun|moon [loc] — shows the time, sunrise/sunset times, length of day, and moon phase
+  - find|locate|latlong [loc] — find coordinates and elevation of a location
+  - eclipse [loc] — information about the next eclipse (currently, 14 October 2023) for a location
+  - nextnexteclipse [loc] — information about the next next eclipse (currently, 8 April 2024) for a location
+  - lasteclipse [loc] — information about the August 2017 total eclipse
+  - swx — current space weather
+  - swf — space weather forecast
+  - lastquake — information about the last large earthquake detected
+  - define [acronym] — find definitions of weather-related acronyms
 
 #### Notes: 
 - To add/edit acronyms for the `define` command, edit `acro.json`
