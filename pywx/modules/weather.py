@@ -646,7 +646,7 @@ class Alert(BaseWeather):
         try:
             payload = super(Alert, self).context(msg)
         except base.ArgumentError:
-            return ['No alert selected']
+            return ['No alerts selected']
         forecast = payload['forecast']
 
         alert_index = payload['args'].alert_index[0]
@@ -711,8 +711,83 @@ class Locate(BaseWeather):
         return payload
 
 
-@register(commands=['eclipse',])
+# @register(commands=['eclipse',])
+# class Eclipse(BaseWeather):
+#     eclipse_api = "https://www.timeanddate.com/scripts/astroserver.php"
+#     template = """{{ name|nc }}: {{ 'Apr 8, 2024 Eclipse'|c('maroon') }}:
+#         {{ 'Start'|tc }}: {{ start }} {{ 'Max'|tc }}: {{ max }} {{ 'End'|tc }}: {{ end }}
+#         {{ 'Duration'|tc }}: {{ duration }} {{ 'Magnitude'|tc }}: {{ mag }} {{ 'Obscuration'|tc }}: {{ obs }}%
+#     """
+
+#     def get_eclipse_data(self, latlng):
+#         params = {
+#             'mode': 'localeclipsejson',
+#             'n': f"@{','.join(map(str, latlng))}",
+#             'iso': '20240408',
+#             'zoom': 5,
+#             'mobile': 0
+#         }
+#         try:
+#             req = requests.get(self.eclipse_api, params=params)
+#             if req.status_code != 200:
+#                 return None
+#             json = req.json()
+#             return json
+#         except Exception: # pylint: disable=broad-except
+#             return None
+
+#     def context(self, msg):
+#         payload = super().context(msg)
+#         eclipse = self.get_eclipse_data((payload['lat'], payload['lng']))
+
+#         payload['start'] = eclipse['events'][0]['txt'][15:]
+#         payload['max'] = eclipse['events'][1]['txt'][15:]
+#         payload['end'] = eclipse['events'][2]['txt'][15:]
+#         payload['duration'] = eclipse['duration']['fmt']
+#         payload['mag'] = eclipse['mag']
+#         payload['obs'] = eclipse['obs'] * 100
+#         return payload
+        
+@register(commands=['eclipse','nexteclipse','eclipse23','eclipse2023'])
 class Eclipse(BaseWeather):
+    eclipse_api = "https://www.timeanddate.com/scripts/astroserver.php"
+    template = """{{ name|nc }}: {{ 'Oct 14 2023 Eclipse'|c('maroon') }}:
+        {{ 'Start'|tc }}: {{ start }} {{ 'Max'|tc }}: {{ max }} {{ 'End'|tc }}: {{ end }}
+        {{ 'Duration'|tc }}: {{ duration }} {{ 'Magnitude'|tc }}: {{ mag }} {{ 'Obscuration'|tc }}: {{ obs }}%
+    """
+
+    def get_eclipse_data(self, latlng):
+        params = {
+            'mode': 'localeclipsejson',
+            'n': '@%s' % ','.join(map(str, latlng)),
+            'iso': '20231014',
+            'zoom': 5,
+            'mobile': 0
+        }
+        try:
+            req = requests.get(self.eclipse_api, params=params)
+            if req.status_code != 200:
+                return None
+            json = req.json()
+            return json
+        except:
+            return None
+
+    def context(self, msg):
+        payload = super(Eclipse, self).context(msg)
+        eclipse = self.get_eclipse_data((payload['lat'], payload['lng']))
+
+        payload['start'] = eclipse['events'][0]['txt'][16:]
+        payload['max'] = eclipse['events'][1]['txt'][16:]
+        payload['end'] = eclipse['events'][2]['txt'][16:]
+        payload['duration'] = eclipse['duration']['fmt']
+        payload['mag'] = eclipse['mag']
+        payload['obs'] = eclipse['obs'] * 100
+        return payload
+        
+        
+@register(commands=['24eclipse','eclipse24','eclipse2024'])
+class Eclipse24(BaseWeather):
     eclipse_api = "https://www.timeanddate.com/scripts/astroserver.php"
     template = """{{ name|nc }}: {{ 'Apr 8, 2024 Eclipse'|c('maroon') }}:
         {{ 'Start'|tc }}: {{ start }} {{ 'Max'|tc }}: {{ max }} {{ 'End'|tc }}: {{ end }}
@@ -722,7 +797,7 @@ class Eclipse(BaseWeather):
     def get_eclipse_data(self, latlng):
         params = {
             'mode': 'localeclipsejson',
-            'n': f"@{','.join(map(str, latlng))}",
+            'n': '@%s' % ','.join(map(str, latlng)),
             'iso': '20240408',
             'zoom': 5,
             'mobile': 0
@@ -733,16 +808,54 @@ class Eclipse(BaseWeather):
                 return None
             json = req.json()
             return json
-        except Exception: # pylint: disable=broad-except
+        except:
             return None
 
     def context(self, msg):
-        payload = super().context(msg)
+        payload = super(Eclipse24, self).context(msg)
         eclipse = self.get_eclipse_data((payload['lat'], payload['lng']))
 
         payload['start'] = eclipse['events'][0]['txt'][15:]
         payload['max'] = eclipse['events'][1]['txt'][15:]
         payload['end'] = eclipse['events'][2]['txt'][15:]
+        payload['duration'] = eclipse['duration']['fmt']
+        payload['mag'] = eclipse['mag']
+        payload['obs'] = eclipse['obs'] * 100
+        return payload
+		
+		
+@register(commands=['oldeclipse','lasteclipse','eclipse17','eclipse2017'])
+class OldEclipse(BaseWeather):
+    eclipse_api = "https://www.timeanddate.com/scripts/astroserver.php"
+    template = """{{ name|nc }}: {{ 'Aug 2017 Eclipse'|c('maroon') }}:
+        {{ 'Start'|tc }}: {{ start }} {{ 'Max'|tc }}: {{ max }} {{ 'End'|tc }}: {{ end }}
+        {{ 'Duration'|tc }}: {{ duration }} {{ 'Magnitude'|tc }}: {{ mag }} {{ 'Obscuration'|tc }}: {{ obs }}%
+    """
+
+    def get_old_eclipse_data(self, latlng):
+        params = {
+            'mode': 'localeclipsejson',
+            'n': '@%s' % ','.join(map(str, latlng)),
+            'iso': '20170821',
+            'zoom': 5,
+            'mobile': 0
+        }
+        try:
+            req = requests.get(self.eclipse_api, params=params)
+            if req.status_code != 200:
+                return None
+            json = req.json()
+            return json
+        except:
+            return None
+
+    def context(self, msg):
+        payload = super(OldEclipse, self).context(msg)
+        eclipse = self.get_old_eclipse_data((payload['lat'], payload['lng']))
+
+        payload['start'] = eclipse['events'][0]['txt'][10:]
+        payload['max'] = eclipse['events'][1]['txt'][10:]
+        payload['end'] = eclipse['events'][2]['txt'][10:]
         payload['duration'] = eclipse['duration']['fmt']
         payload['mag'] = eclipse['mag']
         payload['obs'] = eclipse['obs'] * 100
