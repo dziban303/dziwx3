@@ -646,7 +646,7 @@ class Alert(BaseWeather):
         try:
             payload = super(Alert, self).context(msg)
         except base.ArgumentError:
-            return ['piss']
+            return ['No alert selected']
         forecast = payload['forecast']
 
         alert_index = payload['args'].alert_index[0]
